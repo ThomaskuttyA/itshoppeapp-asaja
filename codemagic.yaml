@@ -5,8 +5,21 @@ workflows:
       flutter: stable
       xcode: latest
     scripts:
-      - flutter build ios --release --flavor ios-production -t lib/main_prod.dart
-      - xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release -archivePath build/ios/archive/Runner.xcarchive archive
-      - xcodebuild -exportArchive -archivePath build/ios/archive/Runner.xcarchive -exportOptionsPlist ios/exportOptions.plist -exportPath build/ios/ipa
+      # Build the iOS app using the default main.dart
+      - flutter build ios --release -t lib/main.dart
+
+      # Archive the iOS app
+      - xcodebuild -workspace ios/Runner.xcworkspace \
+        -scheme Runner \
+        -configuration Release \
+        -archivePath build/ios/archive/Runner.xcarchive \
+        archive
+
+      # Export the archived app as an .ipa file
+      - xcodebuild -exportArchive \
+        -archivePath build/ios/archive/Runner.xcarchive \
+        -exportOptionsPlist ios/exportOptions.plist \
+        -exportPath build/ios/ipa
+
     artifacts:
       - build/ios/ipa/*.ipa
